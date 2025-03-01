@@ -28,6 +28,9 @@
 		21ED1F622D69CBCD0012D6F6 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21ED1F612D69CBCD0012D6F6 /* RootView.swift */; };
 		21ED1F652D69D0340012D6F6 /* ReviewsScreenFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21ED1F642D69D0340012D6F6 /* ReviewsScreenFactory.swift */; };
 		E59BC0AF2D721B99000ACA57 /* CustomActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59BC0AE2D721B99000ACA57 /* CustomActivityIndicator.swift */; };
+		E59BC0B32D739D79000ACA57 /* ShimmeringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59BC0B22D739D78000ACA57 /* ShimmeringView.swift */; };
+		E59BC0B52D73A6EE000ACA57 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59BC0B42D73A6EE000ACA57 /* UIColor+Ext.swift */; };
+		E59BC0B72D73A70C000ACA57 /* VKColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59BC0B62D73A70C000ACA57 /* VKColor.swift */; };
 		E5CEA4D62D714AC3006C412C /* ImageLoaderProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CEA4D52D714AC3006C412C /* ImageLoaderProvider.swift */; };
 		E5CEA4D82D7155FB006C412C /* ImageState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CEA4D72D7155FB006C412C /* ImageState.swift */; };
 		E5CEA4DA2D715A3C006C412C /* ReviewPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CEA4D92D715A3C006C412C /* ReviewPhotoView.swift */; };
@@ -56,6 +59,9 @@
 		21ED1F612D69CBCD0012D6F6 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		21ED1F642D69D0340012D6F6 /* ReviewsScreenFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsScreenFactory.swift; sourceTree = "<group>"; };
 		E59BC0AE2D721B99000ACA57 /* CustomActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomActivityIndicator.swift; sourceTree = "<group>"; };
+		E59BC0B22D739D78000ACA57 /* ShimmeringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmeringView.swift; sourceTree = "<group>"; };
+		E59BC0B42D73A6EE000ACA57 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
+		E59BC0B62D73A70C000ACA57 /* VKColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKColor.swift; sourceTree = "<group>"; };
 		E5CEA4D52D714AC3006C412C /* ImageLoaderProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoaderProvider.swift; sourceTree = "<group>"; };
 		E5CEA4D72D7155FB006C412C /* ImageState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageState.swift; sourceTree = "<group>"; };
 		E5CEA4D92D715A3C006C412C /* ReviewPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPhotoView.swift; sourceTree = "<group>"; };
@@ -118,6 +124,7 @@
 			children = (
 				21B8416E2D47C4C60085DAA2 /* String+Ext.swift */,
 				216668702D48E4B2009AAA76 /* NSAttributedString+Ext.swift */,
+				E59BC0B42D73A6EE000ACA57 /* UIColor+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -168,6 +175,7 @@
 				216668752D48F39E009AAA76 /* Cells */,
 				E5CEA4D52D714AC3006C412C /* ImageLoaderProvider.swift */,
 				E5CEA4D92D715A3C006C412C /* ReviewPhotoView.swift */,
+				E59BC0B22D739D78000ACA57 /* ShimmeringView.swift */,
 			);
 			path = Reviews;
 			sourceTree = "<group>";
@@ -178,6 +186,7 @@
 				E5CEA4D72D7155FB006C412C /* ImageState.swift */,
 				21B8416A2D47BFA10085DAA2 /* Reviews.swift */,
 				21B82E382D47B1320085DAA2 /* Review.swift */,
+				E59BC0B62D73A70C000ACA57 /* VKColor.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -290,8 +299,11 @@
 				21B841712D47C5F00085DAA2 /* TableCellConfig.swift in Sources */,
 				21ED1F652D69D0340012D6F6 /* ReviewsScreenFactory.swift in Sources */,
 				2166686F2D48E23F009AAA76 /* Fonts.swift in Sources */,
+				E59BC0B32D739D79000ACA57 /* ShimmeringView.swift in Sources */,
 				21B82E312D47B0640085DAA2 /* AppDelegate.swift in Sources */,
 				E59BC0AF2D721B99000ACA57 /* CustomActivityIndicator.swift in Sources */,
+				E59BC0B72D73A70C000ACA57 /* VKColor.swift in Sources */,
+				E59BC0B52D73A6EE000ACA57 /* UIColor+Ext.swift in Sources */,
 				E5CEA4D62D714AC3006C412C /* ImageLoaderProvider.swift in Sources */,
 				21B8416F2D47C4C60085DAA2 /* String+Ext.swift in Sources */,
 			);

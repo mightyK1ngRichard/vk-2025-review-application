@@ -4,6 +4,7 @@ final class ReviewPhotoView: UIView {
 
     var imageState: ImageState
 
+    private let shimmeringView = ShimmerView()
     private let imageView = UIImageView()
     private let errorImageView = UIImageView()
 
@@ -28,6 +29,7 @@ final class ReviewPhotoView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        shimmeringView.frame = bounds
         imageView.frame = bounds
         errorImageView.frame = CGRect(
             origin: CGPoint(
@@ -52,8 +54,13 @@ final class ReviewPhotoView: UIView {
 private extension ReviewPhotoView {
 
     func setup() {
+        setShimmeringView()
         setPhotoImageView()
         setErrorImageView()
+    }
+
+    func setShimmeringView() {
+        addSubview(shimmeringView)
     }
 
     func setPhotoImageView() {
@@ -75,12 +82,17 @@ private extension ReviewPhotoView {
             backgroundColor = .clear
             imageView.image = uiImage
             errorImageView.isHidden = true
+            shimmeringView.isHidden = true
+            shimmeringView.stopShimmerAnimation()
         case .failure:
             backgroundColor = .systemGray4
             imageView.image = nil
             errorImageView.isHidden = false
+            shimmeringView.isHidden = true
+            shimmeringView.stopShimmerAnimation()
         case .loading:
-            backgroundColor = .systemGray4
+            shimmeringView.startShimmerAnimation()
+            shimmeringView.isHidden = false
             imageView.image = nil
             errorImageView.isHidden = true
         }
