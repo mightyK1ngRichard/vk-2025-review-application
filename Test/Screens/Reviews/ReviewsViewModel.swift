@@ -109,7 +109,7 @@ private extension ReviewsViewModel {
             makeSnapshot()
             footerText = "\(state.items.count) отзывов"
             state.offset = state.limit
-            state.shouldLoad = state.offset < state.count
+            state.shouldLoad = state.offset < reviews.count
             // Загружаем фотографии из сети
             reviews.items.forEach { item in
                 fetchImages(for: item)
