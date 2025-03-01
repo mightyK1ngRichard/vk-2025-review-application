@@ -136,14 +136,16 @@ final class ReviewCell: UITableViewCell {
         guard imageStates != config?.photosState else {
             return
         }
+
         // Скрываем все старые вью перед обновлением
         for photoView in photosView {
             photoView.isHidden = true
         }
 
+        // Добавляем новые фотографии или обновляем существующие
         for (index, imageState) in imageStates.enumerated() {
             if index < photosView.count {
-                // Если вью уже есть, обновляем картинку и показываем его
+                // Если вью уже есть, обновляем картинку и показываем её
                 let photoView = photosView[index]
                 photoView.updateImage(with: imageState)
                 photoView.isHidden = false
@@ -153,6 +155,13 @@ final class ReviewCell: UITableViewCell {
                 photoView.tag = index
                 contentView.addSubview(photoView)
                 photosView.append(photoView)
+            }
+        }
+
+        // Скрыть лишние фото, если их стало меньше, чем было раньше
+        if imageStates.count < photosView.count {
+            for index in imageStates.count..<photosView.count {
+                photosView[index].isHidden = true
             }
         }
 
@@ -354,12 +363,3 @@ private final class ReviewCellLayout {
 
 fileprivate typealias Config = ReviewCellConfig
 fileprivate typealias Layout = ReviewCellLayout
-
-// MARK: - Preview
-
-@available(iOS 17, *)
-#Preview {
-    let reviewsProvider = ReviewsProvider()
-    let viewModel = ReviewsViewModel(reviewsProvider: reviewsProvider)
-    ReviewsViewController(viewModel: viewModel)
-}

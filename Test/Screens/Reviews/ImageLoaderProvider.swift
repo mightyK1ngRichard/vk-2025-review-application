@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 protocol ImageLoaderProvider: AnyObject {
 
@@ -41,7 +42,9 @@ final class ImageLoaderProviderImpl: ImageLoaderProvider {
                     lock.lock()
                     switch result {
                     case let .success(imageData):
-                        results.append((urlString, .success(imageData)))
+                        if let uiImage = UIImage(data: imageData) {
+                            results.append((urlString, .success(uiImage)))
+                        }
                     case .failure:
                         results.append((urlString, .failure))
                     }

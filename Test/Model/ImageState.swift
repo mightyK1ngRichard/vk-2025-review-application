@@ -1,7 +1,7 @@
-import Foundation
+import UIKit
 
 enum ImageState: Hashable, Sendable, Equatable {
-    case success(Data)
+    case success(UIImage)
     case failure
     case loading
 }

@@ -39,6 +39,9 @@ final class ReviewPhotoView: UIView {
     }
 
     func updateImage(with imageState: ImageState) {
+        guard imageState != self.imageState else {
+            return
+        }
         self.imageState = imageState
         updateImageView()
     }
@@ -68,9 +71,9 @@ private extension ReviewPhotoView {
 
     func updateImageView() {
         switch imageState {
-        case let .success(imageData):
+        case let .success(uiImage):
             backgroundColor = .clear
-            imageView.image = UIImage(data: imageData)
+            imageView.image = uiImage
             errorImageView.isHidden = true
         case .failure:
             backgroundColor = .systemGray4
@@ -91,41 +94,4 @@ private extension ReviewPhotoView {
     enum Constants {
         static let errorImageSize: CGFloat = 20
     }
-}
-
-// MARK: - Preview
-
-@available(iOS 17, *)
-#Preview {
-    final class TestViewController: UIViewController {
-        let testView = ReviewPhotoView()
-        let button = {
-            let button = UIButton()
-            var config = UIButton.Configuration.borderedProminent()
-            config.title = "Update state"
-            button.configuration = config
-            return button
-        }()
-
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            view.addSubview(testView)
-            view.addSubview(button)
-            testView.frame = .init(x: 50, y: 150, width: 55, height: 66)
-            button.frame = .init(x: 50, y: 500, width: 200, height: 30)
-            testView.layer.cornerRadius = 8
-            testView.layer.masksToBounds = true
-            button.addAction(
-                UIAction { _ in
-                    self.testView.updateImage(
-                        with: Bool.random()
-                         ? ImageState.success(UIImage(resource: .IMG_0004).pngData()!)
-                        : ImageState.failure
-                    )
-                },
-                for: .touchUpInside)
-        }
-    }
-
-    return TestViewController()
 }
