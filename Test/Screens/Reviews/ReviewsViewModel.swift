@@ -6,10 +6,11 @@ final class ReviewsViewModel: NSObject {
 
     typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, ReviewCellConfig>
 
-    @Published private(set) var state: State
+    @Published private(set) var footerText: String?
     @Published private(set) var showLoader: Bool
     @Published private(set) var snapshot: DataSourceSnapshot
 
+    private var state: State
     private let reviewsProvider: ReviewsProvider
     private let imageLoaderProvider: ImageLoaderProvider
     private let ratingRenderer: RatingRenderer
@@ -32,8 +33,6 @@ final class ReviewsViewModel: NSObject {
         self.imageLoaderProvider = imageLoaderProvider
         self.ratingRenderer = ratingRenderer
         self.decoder = decoder
-        super.init()
-        subscribe()
     }
 
     enum Section: Hashable {
@@ -76,56 +75,48 @@ extension ReviewsViewModel {
 
 private extension ReviewsViewModel {
 
-    func subscribe() {
-        $state
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.makeSnapshot()
-            }
-            .store(in: &store)
-    }
-
     /// Метод обработки получения отзывов.
     func gotReviews(_ result: ReviewsProvider.GetReviewsResult) {
-        var tempState = state
         do {
             let data = try result.get()
             let reviews = try decoder.decode(Reviews.self, from: data)
-            tempState.items += reviews.items.map(makeReviewItem)
-            tempState.offset += state.limit
-            tempState.shouldLoad = state.offset < reviews.count
+            state.items += reviews.items.map(makeReviewItem)
+            makeSnapshot()
+            footerText = "\(state.items.count) отзывов"
+            state.offset += state.limit
+            state.shouldLoad = state.offset < reviews.count
             // Загружаем фотографии из сети
             reviews.items.forEach { item in
                 fetchImages(for: item)
             }
         } catch {
-            tempState.shouldLoad = true
+            state.shouldLoad = true
         }
-        state = tempState
+
         if showLoader {
             showLoader = false
         }
     }
 
     func refreshedReviews(_ result: ReviewsProvider.GetReviewsResult) {
-        var tempState = state
         // Если рефреш, обновляем все данные и сбрасываем пагинацию
-        tempState.reset()
+        state.reset()
         // TODO: Надо отменить созданные таски сервиса изображений
         do {
             let data = try result.get()
             let reviews = try decoder.decode(Reviews.self, from: data)
-            tempState.items = reviews.items.map(makeReviewItem)
-            tempState.offset = state.limit
-            tempState.shouldLoad = tempState.offset < reviews.count
+            state.items = reviews.items.map(makeReviewItem)
+            makeSnapshot()
+            footerText = "\(state.items.count) отзывов"
+            state.offset = state.limit
+            state.shouldLoad = state.offset < state.count
             // Загружаем фотографии из сети
             reviews.items.forEach { item in
                 fetchImages(for: item)
             }
         } catch {
-            tempState.shouldLoad = true
+            state.shouldLoad = true
         }
-        state = tempState
     }
 
     func fetchImages(for item: Review) {
@@ -139,6 +130,7 @@ private extension ReviewsViewModel {
 
             updatedReview.photosState = urlsWithState.map(\.state)
             state.items[index] = updatedReview
+            makeSnapshot() // FIXME: Подумать про это
         }
     }
 

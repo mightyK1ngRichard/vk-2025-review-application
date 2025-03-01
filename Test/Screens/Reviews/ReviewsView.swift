@@ -34,8 +34,8 @@ final class ReviewsView: UIView {
         )
     }
 
-    func updateFooterLabel(with count: Int) {
-        footerLabel.text = "\(count) отзывов"
+    func updateFooterLabel(with text: String) {
+        footerLabel.text = text
     }
 }
 

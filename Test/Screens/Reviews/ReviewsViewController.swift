@@ -63,11 +63,11 @@ private extension ReviewsViewController {
             }
             .store(in: &store)
 
-        viewModel.$state
+        viewModel.$footerText
+            .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] state in
-                guard let self else { return }
-                reviewsView.updateFooterLabel(with: state.items.count)
+            .sink { [weak self] in
+                self?.reviewsView.updateFooterLabel(with: $0)
             }
             .store(in: &store)
 
