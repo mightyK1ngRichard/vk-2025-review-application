@@ -130,7 +130,7 @@ private extension ReviewsViewModel {
 
             updatedReview.photosState = urlsWithState.map(\.state)
             state.items[index] = updatedReview
-            makeSnapshot() // FIXME: Подумать про это
+            makeSnapshot()
         }
     }
 
@@ -143,6 +143,7 @@ private extension ReviewsViewModel {
         else { return }
         item.maxLines = .zero
         state.items[index] = item
+        makeSnapshot()
     }
 
 }
