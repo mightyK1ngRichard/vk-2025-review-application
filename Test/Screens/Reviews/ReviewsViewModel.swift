@@ -60,10 +60,13 @@ extension ReviewsViewModel {
         }
     }
 
-    func refreshReviews() {
+    func refreshReviews(completion: @escaping () -> Void) {
         state.shouldLoad = false
         reviewsProvider.getReviews() { [weak self] result in
             self?.refreshedReviews(result)
+            DispatchQueue.main.async {
+                completion()
+            }
         }
     }
 
@@ -128,11 +131,12 @@ private extension ReviewsViewModel {
     func fetchImages(for item: Review) {
         guard let urlStrings = item.photoUrls else { return }
         imageLoaderProvider.fetchImagesData(from: urlStrings) { [weak self] urlsWithState in
-            guard let self, let index = state.items.firstIndex(where: { $0.id as? UUID == item.id }) else {
-                return
-            }
+            guard
+                let self,
+                let index = state.items.firstIndex(where: { $0.id as? UUID == item.id }),
+                var updatedReview = state.items[index] as? ReviewCellConfig
+            else { return }
 
-            var updatedReview = makeReviewItem(item)
             updatedReview.photosState = urlsWithState.map(\.state)
             state.items[index] = updatedReview
         }

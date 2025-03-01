@@ -20,7 +20,11 @@ final class ImageLoaderProviderImpl: ImageLoaderProvider {
     private var imageCache = NSCache<NSString, NSData>()
 
     private let cacheQueue = DispatchQueue(label: "com.vk.imageLoader.cacheQueue")
-    private let imageQueue = DispatchQueue(label: "com.vk.imageLoader.imageQueue", qos: .userInteractive, attributes: [.concurrent])
+    private let imageQueue = DispatchQueue(
+        label: "com.vk.imageLoader.imageQueue",
+        qos: .userInteractive,
+        attributes: [.concurrent]
+    )
 
     func fetchImagesData(
         from urlsStrings: [String],
@@ -28,20 +32,17 @@ final class ImageLoaderProviderImpl: ImageLoaderProvider {
     ) {
         let group = DispatchGroup()
         let lock = NSLock()
-        var results: [(String, ImageState)] = []
+        var results: GetImagesStatesResult = []
 
         for urlString in urlsStrings {
             group.enter()
             imageQueue.async {
                 self.fetchImageData(from: urlString) { result in
-                    print("[DEBUG]: я получил данные")
                     lock.lock()
                     switch result {
                     case let .success(imageData):
-                        print("[DEBUG]: я сохранил")
                         results.append((urlString, .success(imageData)))
                     case .failure:
-                        print("[DEBUG]: Ошибка url")
                         results.append((urlString, .failure))
                     }
                     group.leave()
@@ -51,7 +52,6 @@ final class ImageLoaderProviderImpl: ImageLoaderProvider {
         }
 
         group.notify(queue: .main) {
-            print("[DEBUG]: СРАБОТАЛ CALL BACK")
             completion(results)
         }
     }

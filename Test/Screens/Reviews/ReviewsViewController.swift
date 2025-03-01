@@ -16,6 +16,7 @@ final class ReviewsViewController: UIViewController {
         subscribe()
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -39,15 +40,15 @@ private extension ReviewsViewController {
     func makeReviewsView() -> ReviewsView {
         let reviewsView = ReviewsView()
         reviewsView.onRefresh = { [weak self] refreshControl in
-            self?.viewModel.refreshReviews()
-            refreshControl.endRefreshing()
+            self?.viewModel.refreshReviews {
+                refreshControl.endRefreshing()
+            }
         }
         reviewsView.tableView.delegate = viewModel
         return reviewsView
     }
 
     func subscribe() {
-        reviewsView.loadingIndicator.startAnimating()
         viewModel.$showLoader
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isShowing in

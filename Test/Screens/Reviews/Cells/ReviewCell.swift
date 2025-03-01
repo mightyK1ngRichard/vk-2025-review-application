@@ -43,7 +43,13 @@ extension ReviewCellConfig: Identifiable, Hashable, Equatable {
     }
 
     static func == (lhs: ReviewCellConfig, rhs: ReviewCellConfig) -> Bool {
-        lhs.hashValue == rhs.hashValue
+        lhs.id == rhs.id
+        && lhs.username == rhs.username
+        && lhs.reviewText == rhs.reviewText
+        && lhs.raitingImage == rhs.raitingImage
+        && lhs.photosState == rhs.photosState
+        && lhs.maxLines == rhs.maxLines
+        && lhs.created == rhs.created
     }
 
 }
@@ -55,7 +61,10 @@ extension ReviewCellConfig: TableCellConfig {
     /// Метод обновления ячейки.
     /// Вызывается из `cellForRowAt:` у `dataSource` таблицы.
     func update(cell: UITableViewCell) {
-        guard let cell = cell as? ReviewCell else { return }
+        guard
+            let cell = cell as? ReviewCell,
+            cell.config != self
+        else { return }
 
         cell.setPhotos(with: photosState)
         cell.ratingImageView.image = raitingImage
@@ -124,6 +133,9 @@ final class ReviewCell: UITableViewCell {
     }
 
     func setPhotos(with imageStates: [ImageState]) {
+        guard imageStates != config?.photosState else {
+            return
+        }
         // Скрываем все старые вью перед обновлением
         for photoView in photosView {
             photoView.isHidden = true

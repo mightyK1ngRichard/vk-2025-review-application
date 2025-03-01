@@ -25,7 +25,7 @@ final class ReviewsView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        tableView.frame = bounds.inset(by: safeAreaInsets)
+        tableView.frame = bounds
         loadingIndicator.center = center
         loadingIndicator.center = center
         footerLabel.frame = CGRect(
