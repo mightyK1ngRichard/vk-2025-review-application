@@ -166,7 +166,9 @@ private extension ReviewsViewModel {
             raitingImage: raitingImage,
             photosState: review.photoUrls?.map { _ in .loading } ?? [],
             created: created,
-            onTapShowMore: showMoreReview
+            onTapShowMore: { [weak self] in
+                self?.showMoreReview(with: $0)
+            }
         )
         return item
     }
