@@ -14,11 +14,12 @@ protocol ImageLoaderProvider: AnyObject {
 
 final class ImageLoaderProviderImpl: ImageLoaderProvider {
 
-    typealias GetImageDataResult = Result<Data, ImageLoaderError>
+    typealias GetUIImageResult = Result<UIImage, ImageLoaderError>
     typealias GetImagesStatesResult = [(url: String, state: ImageState)]
 
-    private let session = URLSession.shared
-    private var imageCache = NSCache<NSString, NSData>()
+    private let session: URLSession
+    private var imageCache: NSCache<NSString, NSData>
+    private let fileManager: FileManagerImageHashProtocol
 
     private let cacheQueue = DispatchQueue(label: "com.vk.imageLoader.cacheQueue")
     private let imageQueue = DispatchQueue(
@@ -26,6 +27,16 @@ final class ImageLoaderProviderImpl: ImageLoaderProvider {
         qos: .userInteractive,
         attributes: [.concurrent]
     )
+
+    init(
+        session: URLSession = URLSession.shared,
+        imageCache: NSCache<NSString, NSData> = NSCache<NSString, NSData>(),
+        fileManager: FileManagerImageHashProtocol = FileManagerImageHash.shared
+    ) {
+        self.session = session
+        self.imageCache = imageCache
+        self.fileManager = fileManager
+    }
 
     func fetchImagesData(
         from urlsStrings: [String],
@@ -36,15 +47,26 @@ final class ImageLoaderProviderImpl: ImageLoaderProvider {
         var results: GetImagesStatesResult = []
 
         for urlString in urlsStrings {
+            // Если есть в кэше, возвращаем
+            if let imageData = imageCache.object(forKey: urlString as NSString),
+               let uiImage = UIImage(data: imageData as Data) {
+                results.append((urlString, .success(uiImage)))
+                continue
+            }
+
+            // Если есть в файловом хранилище
+            if let uiImage = fileManager.getImage(key: urlString) {
+                results.append((urlString, .success(uiImage)))
+                continue
+            }
+
             group.enter()
             imageQueue.async {
                 self.fetchImageData(from: urlString) { result in
                     lock.lock()
                     switch result {
-                    case let .success(imageData):
-                        if let uiImage = UIImage(data: imageData) {
-                            results.append((urlString, .success(uiImage)))
-                        }
+                    case let .success(uiImage):
+                        results.append((urlString, .success(uiImage)))
                     case .failure:
                         results.append((urlString, .failure))
                     }
@@ -67,16 +89,10 @@ private extension ImageLoaderProviderImpl {
 
     func fetchImageData(
         from urlString: String,
-        completion: @escaping (GetImageDataResult) -> Void
+        completion: @escaping (GetUIImageResult) -> Void
     ) {
         guard let url = URL(string: urlString) else {
             completion(.failure(ImageLoaderError.badURL))
-            return
-        }
-
-        // Если есть в кэше, возвращаем
-        if let imageData = imageCache.object(forKey: urlString as NSString) {
-            completion(.success(imageData as Data))
             return
         }
 
@@ -87,14 +103,18 @@ private extension ImageLoaderProviderImpl {
                 completion(.failure(ImageLoaderError.badData(error)))
                 return
             }
-            guard let data else {
+            guard
+                let data,
+                let uiImage = UIImage(data: data)
+            else {
                 completion(.failure(ImageLoaderError.DataIsNil))
                 return
             }
 
-            completion(.success(data))
+            completion(.success(uiImage))
 
             // Кэшируем
+            fileManager.saveImage(uiImage: uiImage, for: urlString, completion: nil)
             cacheQueue.sync {
                 self.imageCache.setObject(data as NSData, forKey: urlString as NSString)
             }

@@ -34,6 +34,7 @@
 		E5CEA4D62D714AC3006C412C /* ImageLoaderProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CEA4D52D714AC3006C412C /* ImageLoaderProvider.swift */; };
 		E5CEA4D82D7155FB006C412C /* ImageState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CEA4D72D7155FB006C412C /* ImageState.swift */; };
 		E5CEA4DA2D715A3C006C412C /* ReviewPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CEA4D92D715A3C006C412C /* ReviewPhotoView.swift */; };
+		E5ED21992D73EE2100DED366 /* FileManagerImageHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5ED21982D73EE2100DED366 /* FileManagerImageHash.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +66,7 @@
 		E5CEA4D52D714AC3006C412C /* ImageLoaderProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoaderProvider.swift; sourceTree = "<group>"; };
 		E5CEA4D72D7155FB006C412C /* ImageState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageState.swift; sourceTree = "<group>"; };
 		E5CEA4D92D715A3C006C412C /* ReviewPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPhotoView.swift; sourceTree = "<group>"; };
+		E5ED21982D73EE2100DED366 /* FileManagerImageHash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerImageHash.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -220,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				E5CEA4D52D714AC3006C412C /* ImageLoaderProvider.swift */,
+				E5ED21982D73EE2100DED366 /* FileManagerImageHash.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -322,6 +325,7 @@
 				E5CEA4D62D714AC3006C412C /* ImageLoaderProvider.swift in Sources */,
 				21B8416F2D47C4C60085DAA2 /* String+Ext.swift in Sources */,
 				E59BC0B92D73D22B000ACA57 /* ZoomableImageViewController.swift in Sources */,
+				E5ED21992D73EE2100DED366 /* FileManagerImageHash.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
