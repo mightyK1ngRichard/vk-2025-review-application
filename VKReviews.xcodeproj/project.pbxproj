@@ -43,7 +43,7 @@
 		216668722D48E89A009AAA76 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		21667B7F2D4A25B2009AAA76 /* RatingRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingRenderer.swift; sourceTree = "<group>"; };
 		2166A0F32D4A5B25009AAA76 /* ReviewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsView.swift; sourceTree = "<group>"; };
-		21B82DF92D4792300085DAA2 /* Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Test.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		21B82DF92D4792300085DAA2 /* VKReviews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VKReviews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21B82E232D47B0640085DAA2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		21B82E252D47B0640085DAA2 /* ReviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewCell.swift; sourceTree = "<group>"; };
 		21B82E292D47B0640085DAA2 /* ReviewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsViewController.swift; sourceTree = "<group>"; };
@@ -63,6 +63,7 @@
 		E59BC0B22D739D78000ACA57 /* ShimmeringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmeringView.swift; sourceTree = "<group>"; };
 		E59BC0B42D73A6EE000ACA57 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		E59BC0B82D73D22B000ACA57 /* ZoomableImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableImageViewController.swift; sourceTree = "<group>"; };
+		E5A15BC62D7475930036F40B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E5CEA4D52D714AC3006C412C /* ImageLoaderProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoaderProvider.swift; sourceTree = "<group>"; };
 		E5CEA4D72D7155FB006C412C /* ImageState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageState.swift; sourceTree = "<group>"; };
 		E5CEA4D92D715A3C006C412C /* ReviewPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPhotoView.swift; sourceTree = "<group>"; };
@@ -108,7 +109,7 @@
 		21B82DF02D4792300085DAA2 = {
 			isa = PBXGroup;
 			children = (
-				21B82E2C2D47B0640085DAA2 /* Test */,
+				21B82E2C2D47B0640085DAA2 /* VKReviews */,
 				21B82DFA2D4792300085DAA2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -116,7 +117,7 @@
 		21B82DFA2D4792300085DAA2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				21B82DF92D4792300085DAA2 /* Test.app */,
+				21B82DF92D4792300085DAA2 /* VKReviews.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -134,6 +135,7 @@
 		21B82E242D47B0640085DAA2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E5A15BC62D7475930036F40B /* Info.plist */,
 				21B841692D47BE780085DAA2 /* Responses */,
 				21B82E232D47B0640085DAA2 /* Assets.xcassets */,
 			);
@@ -150,7 +152,7 @@
 			path = Screens;
 			sourceTree = "<group>";
 		};
-		21B82E2C2D47B0640085DAA2 /* Test */ = {
+		21B82E2C2D47B0640085DAA2 /* VKReviews */ = {
 			isa = PBXGroup;
 			children = (
 				21B82E2B2D47B0640085DAA2 /* AppDelegate.swift */,
@@ -162,7 +164,7 @@
 				21B82E222D47B0640085DAA2 /* Extensions */,
 				21B82E242D47B0640085DAA2 /* Resources */,
 			);
-			path = Test;
+			path = VKReviews;
 			sourceTree = "<group>";
 		};
 		21B82E372D47B1090085DAA2 /* Reviews */ = {
@@ -230,9 +232,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		21B82DF82D4792300085DAA2 /* Test */ = {
+		21B82DF82D4792300085DAA2 /* VKReviews */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 21B82E0C2D4792310085DAA2 /* Build configuration list for PBXNativeTarget "Test" */;
+			buildConfigurationList = 21B82E0C2D4792310085DAA2 /* Build configuration list for PBXNativeTarget "VKReviews" */;
 			buildPhases = (
 				21B82DF52D4792300085DAA2 /* Sources */,
 				21B82DF62D4792300085DAA2 /* Frameworks */,
@@ -242,11 +244,11 @@
 			);
 			dependencies = (
 			);
-			name = Test;
+			name = VKReviews;
 			packageProductDependencies = (
 			);
 			productName = Test;
-			productReference = 21B82DF92D4792300085DAA2 /* Test.app */;
+			productReference = 21B82DF92D4792300085DAA2 /* VKReviews.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -264,7 +266,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 21B82DF42D4792300085DAA2 /* Build configuration list for PBXProject "Test" */;
+			buildConfigurationList = 21B82DF42D4792300085DAA2 /* Build configuration list for PBXProject "VKReviews" */;
 			developmentRegion = ru;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -278,7 +280,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				21B82DF82D4792300085DAA2 /* Test */,
+				21B82DF82D4792300085DAA2 /* VKReviews */,
 			);
 		};
 /* End PBXProject section */
@@ -340,8 +342,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = VKReviews/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
@@ -370,8 +372,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = VKReviews/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
@@ -516,7 +518,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		21B82DF42D4792300085DAA2 /* Build configuration list for PBXProject "Test" */ = {
+		21B82DF42D4792300085DAA2 /* Build configuration list for PBXProject "VKReviews" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				21B82E0F2D4792310085DAA2 /* Debug */,
@@ -525,7 +527,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		21B82E0C2D4792310085DAA2 /* Build configuration list for PBXNativeTarget "Test" */ = {
+		21B82E0C2D4792310085DAA2 /* Build configuration list for PBXNativeTarget "VKReviews" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				21B82E0D2D4792310085DAA2 /* Debug */,
