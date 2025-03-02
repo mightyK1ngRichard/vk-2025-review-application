@@ -22,6 +22,8 @@ struct ReviewCellConfig {
     let created: NSAttributedString
     /// Замыкание, вызываемое при нажатии на кнопку "Показать полностью...".
     let onTapShowMore: (UUID) -> Void
+    /// Замыкание, вызываемое при нажатии на изображение.
+    let onTapPhoto: (UIImage) -> Void
 
     /// Объект, хранящий посчитанные фреймы для ячейки отзыва.
     fileprivate let layout = ReviewCellLayout()
@@ -196,6 +198,9 @@ private extension ReviewCell {
         let photoView = ReviewPhotoView(imageState: imageState)
         photoView.layer.cornerRadius = ReviewCellLayout.photoCornerRadius
         photoView.layer.masksToBounds = true
+        photoView.onTapImage = { [weak self] uiImage in
+            self?.config?.onTapPhoto(uiImage)
+        }
         return photoView
     }
 
@@ -328,14 +333,12 @@ private final class ReviewCellLayout {
             reviewTextLabelFrame = CGRect(
                 origin: CGPoint(
                     x: contentXPosition,
-                    // FIXME: ratingToTextSpacing подумать если есть фото
                     y: photosMaxY + ratingToTextSpacing
                 ),
                 size: config.reviewText.boundingRect(width: width, height: currentTextHeight).size
             )
             maxY = reviewTextLabelFrame.maxY + reviewTextToCreatedSpacing
         } else {
-            // FIXME: Тут ещё отступ добваить бы
             maxY = photosMaxY + reviewTextToCreatedSpacing
         }
 

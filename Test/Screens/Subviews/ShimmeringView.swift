@@ -1,10 +1,3 @@
-//
-//  ShimmeringView.swift
-//  Test
-//
-//  Created by Dmitriy Permyakov on 01.03.2025.
-//
-
 import UIKit
 
 final class ShimmerView: UIView {
@@ -23,9 +16,9 @@ final class ShimmerView: UIView {
 
     private func setupShimmerEffect() {
         gradientLayer.colors = [
-            VKColor.bgShimmering.uiColor.cgColor,
+            UIColor.shimmiring.cgColor,
             UIColor.systemGray5.cgColor,
-            VKColor.bgShimmering.uiColor.cgColor,
+            UIColor.shimmiring.cgColor,
         ]
         gradientLayer.startPoint = CGPoint(x: 0, y: 0)
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
@@ -51,9 +44,4 @@ final class ShimmerView: UIView {
         super.layoutSubviews()
         gradientLayer.frame = bounds
     }
-}
-
-@available(iOS 17, *)
-#Preview {
-    ShimmerView()
 }

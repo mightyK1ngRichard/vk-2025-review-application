@@ -8,6 +8,7 @@ final class ReviewsViewModel: NSObject {
 
     @Published private(set) var footerText: String?
     @Published private(set) var showLoader: Bool
+    @Published private(set) var openImageZooming: UIImage?
     @Published private(set) var snapshot: DataSourceSnapshot
 
     private var state: State
@@ -168,6 +169,9 @@ private extension ReviewsViewModel {
             created: created,
             onTapShowMore: { [weak self] in
                 self?.showMoreReview(with: $0)
+            },
+            onTapPhoto: { [weak self] uiImage in
+                self?.openImageZooming = uiImage
             }
         )
         return item

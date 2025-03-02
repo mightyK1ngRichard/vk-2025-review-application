@@ -78,6 +78,14 @@ private extension ReviewsViewController {
                 self?.diffableDataSource.apply(snapshot, animatingDifferences: false)
             }
             .store(in: &store)
+
+        viewModel.$openImageZooming
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] uiImage in
+                self?.openImageZoomingViewController(with: uiImage)
+            }
+            .store(in: &store)
     }
 
     func makeDataSource() -> DataSource {
@@ -88,13 +96,10 @@ private extension ReviewsViewController {
         }
     }
 
-}
+    func openImageZoomingViewController(with uiImage: UIImage) {
+        let overlayViewController = ZoomableImageViewController(uiImage: uiImage)
+        overlayViewController.modalPresentationStyle = .overFullScreen
+        present(overlayViewController, animated: false)
+    }
 
-// MARK: - Preview
-
-@available(iOS 17, *)
-#Preview {
-    let reviewsProvider = ReviewsProvider()
-    let viewModel = ReviewsViewModel(reviewsProvider: reviewsProvider)
-    ReviewsViewController(viewModel: viewModel)
 }

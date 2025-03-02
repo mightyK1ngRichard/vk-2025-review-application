@@ -79,15 +79,6 @@ private extension ReviewsView {
     }
 }
 
-// MARK: - Preview
-
-@available(iOS 17, *)
-#Preview {
-    let reviewsProvider = ReviewsProvider()
-    let viewModel = ReviewsViewModel(reviewsProvider: reviewsProvider)
-    ReviewsViewController(viewModel: viewModel)
-}
-
 // MARK: - Constants
 
 private extension ReviewsView {

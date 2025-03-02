@@ -3,6 +3,7 @@ import UIKit
 final class ReviewPhotoView: UIView {
 
     var imageState: ImageState
+    var onTapImage: ((UIImage) -> Void)? = nil
 
     private let shimmeringView = ShimmerView()
     private let imageView = UIImageView()
@@ -57,6 +58,7 @@ private extension ReviewPhotoView {
         setShimmeringView()
         setPhotoImageView()
         setErrorImageView()
+        addAction()
     }
 
     func setShimmeringView() {
@@ -66,6 +68,7 @@ private extension ReviewPhotoView {
     func setPhotoImageView() {
         addSubview(imageView)
         imageView.contentMode = .scaleAspectFill
+        imageView.isUserInteractionEnabled = true
     }
 
     func setErrorImageView() {
@@ -74,6 +77,11 @@ private extension ReviewPhotoView {
         errorImageView.contentMode = .scaleAspectFit
         errorImageView.tintColor = .white
         errorImageView.isHidden = true
+    }
+
+    func addAction() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap))
+        imageView.addGestureRecognizer(tapGestureRecognizer)
     }
 
     func updateImageView() {
@@ -96,6 +104,14 @@ private extension ReviewPhotoView {
             imageView.image = nil
             errorImageView.isHidden = true
         }
+    }
+
+    // MARK: Action
+
+    @objc
+    func didTap() {
+        guard let uiImage = imageView.image else { return }
+        onTapImage?(uiImage)
     }
 }
 
