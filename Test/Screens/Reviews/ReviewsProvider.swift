@@ -4,7 +4,12 @@ import Foundation
 final class ReviewsProvider {
 
     private let bundle: Bundle
-    private let networkQueue = DispatchQueue(label: "com.vk.reviewsProvider.networkQueue", qos: .userInitiated, attributes: [.concurrent])
+    private let networkQueue = DispatchQueue(
+        label: "com.vk.reviewsProvider.networkQueue",
+        qos: .userInitiated,
+        attributes: [.concurrent]
+    )
+    private var activeRequests: [DispatchWorkItem] = []
 
     init(bundle: Bundle = .main) {
         self.bundle = bundle
@@ -31,7 +36,7 @@ extension ReviewsProvider {
         }
 
         // Симулируем сетевой запрос - не менять
-        networkQueue.async {
+        let workItem = DispatchWorkItem {
             usleep(.random(in: 100_000...1_000_000))
 
             do {
@@ -41,6 +46,13 @@ extension ReviewsProvider {
                 completion(.failure(.badData(error)))
             }
         }
+        activeRequests.append(workItem)
+        networkQueue.async(execute: workItem)
+    }
+
+    func cancelAllRequests() {
+        activeRequests.forEach { $0.cancel() }
+        activeRequests.removeAll()
     }
 
 }

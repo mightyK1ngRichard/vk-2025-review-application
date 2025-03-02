@@ -2,9 +2,11 @@ import UIKit
 import CommonCrypto
 
 protocol FileManagerImageHashProtocol {
+
     func getImage(key: String) -> UIImage?
     func saveImage(uiImage: UIImage, for key: String, completion: ((Error?) -> Void)?)
     func deleteImage(by key: String)
+
 }
 
 // MARK: - FileManagerImageHash
@@ -16,6 +18,7 @@ final class FileManagerImageHash {
     private let saveQueue = DispatchQueue(label: "com.vk.FileManagerImageHash.saveImages", qos: .utility, attributes: [.concurrent])
 
     private init() {}
+
 }
 
 // MARK: - FileManagerImageHashProtocol
@@ -24,11 +27,9 @@ extension FileManagerImageHash: FileManagerImageHashProtocol {
 
     func getImage(key: String) -> UIImage? {
         guard let url = path else {
-            #if DEBUG
-            print("[DEBUG]: file manager url is nil")
-            #endif
             return nil
         }
+
         let imageURL = url.appendingPathComponent(imageHash(with: key))
 
         let imagePath: String
@@ -37,13 +38,11 @@ extension FileManagerImageHash: FileManagerImageHashProtocol {
         } else {
             imagePath = imageURL.path
         }
+
         guard
             fileManager.fileExists(atPath: imagePath),
             let data = try? Data(contentsOf: imageURL)
         else {
-            #if DEBUG
-            print("[DEBUG]: file is not found or data is nil")
-            #endif
             return nil
         }
 
@@ -52,19 +51,14 @@ extension FileManagerImageHash: FileManagerImageHashProtocol {
 
     func saveImage(uiImage: UIImage, for key: String, completion: ((Error?) -> Void)? = nil) {
         guard let url = path else {
-            #if DEBUG
-            print("[DEBUG]: file manager url is nil")
-            #endif
             return
         }
+
         let imageURL = url.appendingPathComponent(imageHash(with: key))
         saveQueue.async {
             let data = uiImage.pngData()
             do {
                 try data?.write(to: imageURL, options: [.atomic])
-                #if DEBUG
-                print("[DEBUG]: image by key: [\(key)] successfully saved!")
-                #endif
                 completion?(nil)
             } catch {
                 #if DEBUG
@@ -77,7 +71,6 @@ extension FileManagerImageHash: FileManagerImageHashProtocol {
 
     func deleteImage(by key: String) {
         guard let url = path else {
-            print("[DEBUG]: file manager url is nil")
             return
         }
 
@@ -89,11 +82,13 @@ extension FileManagerImageHash: FileManagerImageHashProtocol {
             } else {
                 try fileManager.removeItem(atPath: imageURL.path)
             }
-            print("[DEBUG]: image by key: \(key) successfully deleted")
         } catch {
+            #if DEBUG
             print("[DEBUG]: failed deletion of the file by key: \(key)")
+            #endif
         }
     }
+
 }
 
 // MARK: - Helpers

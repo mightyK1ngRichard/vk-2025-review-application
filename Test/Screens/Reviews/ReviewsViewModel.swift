@@ -102,7 +102,8 @@ private extension ReviewsViewModel {
     func refreshedReviews(_ result: ReviewsProvider.GetReviewsResult) {
         // Если рефреш, обновляем все данные и сбрасываем пагинацию
         state.reset()
-        // TODO: Надо отменить созданные таски сервиса изображений
+        // Отменяем все повисшие запросы
+        reviewsProvider.cancelAllRequests()
         do {
             let data = try result.get()
             let reviews = try decoder.decode(Reviews.self, from: data)
