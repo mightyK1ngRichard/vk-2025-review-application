@@ -7,18 +7,52 @@ struct ReviewCellConfig {
     static let reuseId = String(describing: ReviewCellConfig.self)
 
     /// Идентификатор конфигурации. Можно использовать для поиска конфигурации в массиве.
-    let id = UUID()
+    let id: UUID
+    /// Имя пользователя.
+    let username: NSAttributedString
     /// Текст отзыва.
     let reviewText: NSAttributedString
+    /// Рейтинг отзыва.
+    let raitingImage: UIImage
+    /// Фотографии отзыва.
+    var photosState: [ImageState]
     /// Максимальное отображаемое количество строк текста. По умолчанию 3.
     var maxLines = 3
     /// Время создания отзыва.
     let created: NSAttributedString
     /// Замыкание, вызываемое при нажатии на кнопку "Показать полностью...".
     let onTapShowMore: (UUID) -> Void
+    /// Замыкание, вызываемое при нажатии на изображение.
+    let onTapPhoto: (UIImage) -> Void
 
     /// Объект, хранящий посчитанные фреймы для ячейки отзыва.
     fileprivate let layout = ReviewCellLayout()
+
+}
+
+// MARK: - Identifiable & Hashable & Equatable
+
+extension ReviewCellConfig: Identifiable, Hashable, Equatable {
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(username)
+        hasher.combine(reviewText)
+        hasher.combine(raitingImage)
+        hasher.combine(photosState)
+        hasher.combine(maxLines)
+        hasher.combine(created)
+    }
+
+    static func == (lhs: ReviewCellConfig, rhs: ReviewCellConfig) -> Bool {
+        lhs.id == rhs.id
+        && lhs.username == rhs.username
+        && lhs.reviewText == rhs.reviewText
+        && lhs.raitingImage == rhs.raitingImage
+        && lhs.photosState == rhs.photosState
+        && lhs.maxLines == rhs.maxLines
+        && lhs.created == rhs.created
+    }
 
 }
 
@@ -29,7 +63,14 @@ extension ReviewCellConfig: TableCellConfig {
     /// Метод обновления ячейки.
     /// Вызывается из `cellForRowAt:` у `dataSource` таблицы.
     func update(cell: UITableViewCell) {
-        guard let cell = cell as? ReviewCell else { return }
+        guard
+            let cell = cell as? ReviewCell,
+            cell.config != self
+        else { return }
+
+        cell.setPhotos(with: photosState)
+        cell.ratingImageView.image = raitingImage
+        cell.nameLable.attributedText = username
         cell.reviewTextLabel.attributedText = reviewText
         cell.reviewTextLabel.numberOfLines = maxLines
         cell.createdLabel.attributedText = created
@@ -60,9 +101,13 @@ final class ReviewCell: UITableViewCell {
 
     fileprivate var config: Config?
 
+    fileprivate let ratingImageView = UIImageView()
+    fileprivate let nameLable = UILabel()
+    fileprivate let avatarImageView = UIImageView()
     fileprivate let reviewTextLabel = UILabel()
     fileprivate let createdLabel = UILabel()
     fileprivate let showMoreButton = UIButton()
+    fileprivate var photosView = [ReviewPhotoView]()
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -76,9 +121,53 @@ final class ReviewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         guard let layout = config?.layout else { return }
+        nameLable.frame = layout.nameLableFrame
+        ratingImageView.frame = layout.ratingImageViewFrame
+        avatarImageView.frame = layout.avatarImageViewFrame
         reviewTextLabel.frame = layout.reviewTextLabelFrame
         createdLabel.frame = layout.createdLabelFrame
         showMoreButton.frame = layout.showMoreButtonFrame
+
+        for index in 0..<photosView.count {
+            guard index < layout.photosFrames.count else { break }
+            photosView[index].frame = layout.photosFrames[index]
+        }
+    }
+
+    func setPhotos(with imageStates: [ImageState]) {
+        guard imageStates != config?.photosState else {
+            return
+        }
+
+        // Скрываем все старые вью перед обновлением
+        for photoView in photosView {
+            photoView.isHidden = true
+        }
+
+        // Добавляем новые фотографии или обновляем существующие
+        for (index, imageState) in imageStates.enumerated() {
+            if index < photosView.count {
+                // Если вью уже есть, обновляем картинку и показываем её
+                let photoView = photosView[index]
+                photoView.updateImage(with: imageState)
+                photoView.isHidden = false
+            } else {
+                // Если не хватает вью, создаём новые
+                let photoView = makeReviewPhotoView(for: imageState)
+                photoView.tag = index
+                contentView.addSubview(photoView)
+                photosView.append(photoView)
+            }
+        }
+
+        // Скрыть лишние фото, если их стало меньше, чем было раньше
+        if imageStates.count < photosView.count {
+            for index in imageStates.count..<photosView.count {
+                photosView[index].isHidden = true
+            }
+        }
+
+        setNeedsLayout()
     }
 
 }
@@ -88,9 +177,38 @@ final class ReviewCell: UITableViewCell {
 private extension ReviewCell {
 
     func setupCell() {
+        setupNameLabel()
+        setupRatingImage()
+        setupAvatarImageView()
         setupReviewTextLabel()
         setupCreatedLabel()
         setupShowMoreButton()
+        addAction()
+    }
+
+    func setupNameLabel() {
+        contentView.addSubview(nameLable)
+    }
+
+    func setupRatingImage() {
+        contentView.addSubview(ratingImageView)
+    }
+
+    func makeReviewPhotoView(for imageState: ImageState) -> ReviewPhotoView {
+        let photoView = ReviewPhotoView(imageState: imageState)
+        photoView.layer.cornerRadius = ReviewCellLayout.photoCornerRadius
+        photoView.layer.masksToBounds = true
+        photoView.onTapImage = { [weak self] uiImage in
+            self?.config?.onTapPhoto(uiImage)
+        }
+        return photoView
+    }
+
+    func setupAvatarImageView() {
+        contentView.addSubview(avatarImageView)
+        avatarImageView.image = UIImage(resource: .l5W5AIHioYc)
+        avatarImageView.layer.cornerRadius = ReviewCellLayout.avatarCornerRadius
+        avatarImageView.layer.masksToBounds = true
     }
 
     func setupReviewTextLabel() {
@@ -106,6 +224,14 @@ private extension ReviewCell {
         contentView.addSubview(showMoreButton)
         showMoreButton.contentVerticalAlignment = .fill
         showMoreButton.setAttributedTitle(Config.showMoreText, for: .normal)
+    }
+
+    func addAction() {
+        let action = UIAction { [weak self] _ in
+            guard let self, let config else { return }
+            config.onTapShowMore(config.id)
+        }
+        showMoreButton.addAction(action, for: .touchUpInside)
     }
 
 }
@@ -127,6 +253,10 @@ private final class ReviewCellLayout {
 
     // MARK: - Фреймы
 
+    private(set) var nameLableFrame = CGRect.zero
+    private(set) var ratingImageViewFrame = CGRect.zero
+    private(set) var avatarImageViewFrame = CGRect.zero
+    private(set) var photosFrames = [CGRect]()
     private(set) var reviewTextLabelFrame = CGRect.zero
     private(set) var showMoreButtonFrame = CGRect.zero
     private(set) var createdLabelFrame = CGRect.zero
@@ -157,10 +287,40 @@ private final class ReviewCellLayout {
 
     /// Возвращает высоту ячейку с данной конфигурацией `config` и ограничением по ширине `maxWidth`.
     func height(config: Config, maxWidth: CGFloat) -> CGFloat {
-        let width = maxWidth - insets.left - insets.right
+        let width = maxWidth - insets.left - insets.right - Self.avatarSize.width - avatarToUsernameSpacing
+        let contentXPosition: CGFloat = insets.left + Self.avatarSize.width + avatarToUsernameSpacing
 
         var maxY = insets.top
         var showShowMoreButton = false
+
+        avatarImageViewFrame = CGRect(
+            origin: CGPoint(x: insets.left, y: insets.top),
+            size: Self.avatarSize
+        )
+
+        nameLableFrame = CGRect(
+            origin: CGPoint(x: contentXPosition, y: insets.top),
+            size: config.username.boundingRect(width: width).size
+        )
+
+        ratingImageViewFrame = CGRect(
+            origin: CGPoint(x: contentXPosition, y: nameLableFrame.maxY + usernameToRatingSpacing),
+            size: config.raitingImage.size
+        )
+
+        photosFrames = config.photosState.enumerated().map { index, _ in
+            CGRect(
+                origin: CGPoint(
+                    x: contentXPosition + Self.photoSize.width * CGFloat(index) + CGFloat(index) * photosSpacing,
+                    y: ratingImageViewFrame.maxY + ratingToPhotosSpacing
+                ),
+                size: CGSize(
+                    width: Self.photoSize.width,
+                    height: Self.photoSize.height
+                )
+            )
+        }
+        let photosMaxY = photosFrames.last?.maxY ?? ratingImageViewFrame.maxY
 
         if !config.reviewText.isEmpty() {
             // Высота текста с текущим ограничением по количеству строк.
@@ -171,15 +331,20 @@ private final class ReviewCellLayout {
             showShowMoreButton = config.maxLines != .zero && actualTextHeight > currentTextHeight
 
             reviewTextLabelFrame = CGRect(
-                origin: CGPoint(x: insets.left, y: maxY),
+                origin: CGPoint(
+                    x: contentXPosition,
+                    y: photosMaxY + ratingToTextSpacing
+                ),
                 size: config.reviewText.boundingRect(width: width, height: currentTextHeight).size
             )
             maxY = reviewTextLabelFrame.maxY + reviewTextToCreatedSpacing
+        } else {
+            maxY = photosMaxY + reviewTextToCreatedSpacing
         }
 
         if showShowMoreButton {
             showMoreButtonFrame = CGRect(
-                origin: CGPoint(x: insets.left, y: maxY),
+                origin: CGPoint(x: contentXPosition, y: maxY),
                 size: Self.showMoreButtonSize
             )
             maxY = showMoreButtonFrame.maxY + showMoreToCreatedSpacing
@@ -188,7 +353,7 @@ private final class ReviewCellLayout {
         }
 
         createdLabelFrame = CGRect(
-            origin: CGPoint(x: insets.left, y: maxY),
+            origin: CGPoint(x: contentXPosition, y: maxY),
             size: config.created.boundingRect(width: width).size
         )
 
